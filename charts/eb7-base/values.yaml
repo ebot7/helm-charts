@@ -1,0 +1,114 @@
+# Default values.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: "ECR-Repo"
+  tag: latest
+  pullPolicy: IfNotPresent
+
+namespace: "default"
+
+environments: {}
+  # SAMPLE_ENV1: "Value1"
+  # SAMPLE_ENV2: "Value2"
+
+awsSecrets: {}
+  # - objectAlias: SECRET1
+  #   objectType: secretsmanager
+  #   objectName: 'ARN1'
+  # - objectAlias: SECRET2
+  #   objectType: secretsmanager
+  #   objectName: 'ARN2'
+
+service:
+  enabled: false
+  # type: ClusterIP
+  # ports:
+  # - port: 80
+  #   targetPort: 5000
+  #   protocol: TCP
+  #   name: http
+  # - port: 8000
+  #   targetPort: 8000
+  #   protocol: TCP
+  #   name: grpc
+
+
+replicaCount: 1
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Enable for Pod disruption budget
+# budget:
+#   minAvailable: 1
+
+updateStrategy:
+  enabled: true
+  type: RollingUpdate
+  maxSurge: 1
+  maxUnavailable: 0
+
+# resources:
+#   limits:
+#     cpu: 1000m
+#     memory: 512Mi
+#   requests:
+#     cpu: 100m
+#     memory: 128Mi
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+annonations: {}
+  # linkerd.io/inject: enabled
+  # sidecar.jaegertracing.io/inject: "true"
+
+labels: {}
+  # log_index: ml.telomere
+  # environment: staging
+
+
+nodeSelector: {}
+tolerations: []
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: eks.amazonaws.com/nodegroup
+          operator: In
+          values:
+          - gp-nodes
+
+# livenessProbe:
+#   failureThreshold: 5
+#   initialDelaySeconds: 5
+#   timeoutSeconds: 2
+#   healthcheck:
+#     httpGet:
+#       path: "/health/status"
+#       port: 5000
+# readinessProbe:
+#   failureThreshold: 10
+#   initialDelaySeconds: 5
+#   timeoutSeconds: 2
+#   healthcheck:
+#     httpGet:
+#       path: "/health/status"
+#       port: 5000
+
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: apps-sa
