@@ -9,49 +9,31 @@ image:
 
 namespace: "default"
 
-environments: {}
-  # SAMPLE_ENV1: "Value1"
-  # SAMPLE_ENV2: "Value2"
-
-awsSecrets: {}
-  # - objectAlias: SECRET1
-  #   objectType: secretsmanager
-  #   objectName: 'ARN1'
-  # - objectAlias: SECRET2
-  #   objectType: secretsmanager
-  #   objectName: 'ARN2'
-
-service:
-  enabled: false
-  # type: ClusterIP
-  # ports:
-  # - port: 80
-  #   targetPort: 5000
-  #   protocol: TCP
-  #   name: http
-  # - port: 8000
-  #   targetPort: 8000
-  #   protocol: TCP
-  #   name: grpc
+# It can be either Deployment or DaemonSet
+resourceType: "Deployment" 
 
 
-replicaCount: 1
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+# environments:
+#   SAMPLE_ENV1: "Value1"
+#   SAMPLE_ENV2: "Value2"
 
-# Enable for Pod disruption budget
-# budget:
-#   minAvailable: 1
+# awsSecrets:
+#   - objectAlias: SECRET1
+#     objectType: secretsmanager
+#     objectName: 'ARN1'
+#   - objectAlias: SECRET2
+#     objectType: secretsmanager
+#     objectName: 'ARN2'
 
-updateStrategy:
-  enabled: true
-  type: RollingUpdate
-  maxSurge: 1
-  maxUnavailable: 0
+# servicePorts:
+#   - port: 80
+#     targetPort: 5000
+#     protocol: TCP
+#     name: http
+#   - port: 8000
+#     targetPort: 8000
+#     protocol: TCP
+#     name: grpc
 
 # resources:
 #   limits:
@@ -61,22 +43,72 @@ updateStrategy:
 #     cpu: 100m
 #     memory: 128Mi
 
+serviceAccountName: apps-sa
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-annonations: {}
-  # linkerd.io/inject: enabled
+annotations:
+  linkerd.io/inject: enabled
   # sidecar.jaegertracing.io/inject: "true"
 
-labels: {}
-  # log_index: ml.telomere
-  # environment: staging
+# labels:
+#   log_index: ml.telomere
+#   environment: staging
 
 
-nodeSelector: {}
-tolerations: []
+healthCheckProbes:
+  failureThreshold: 5
+  initialDelaySeconds: 5
+  timeoutSeconds: 2
+  periodSeconds: 30
+  # Health check should not be enabled automatically
+  # Because there might be different exec or httpGet keys
+  # and you end up with multiple healthchecks
+  # healthCheck:
+  #   httpGet:
+  #     path: "/health/status"
+  #     port: 5000
+
+
+# hostVolumes:
+#   - name: host-volume-1
+#     mountPath: /host-volume1
+#     hostPath: /var/lib/host-volume1
+#   - name: host-volume-2
+#     mountPath: /host-volume2
+#     hostPath: /var/lib/host-volume2
+
+
+# AWS_EFS_ID should be aquired from DevOps Team
+# efsPvcVolumes:
+#   - name: efs-pvc1
+#     mountPath: /var/lib/efs-pvc1
+#     size: 6G
+#     efsID: AWS_EFS_ID1
+#   - name: efs-pvc2
+#     mountPath: /var/lib/efs-pvc2
+#     size: 10G
+#     efsID: AWS_EFS_ID2
+
+
+# updateStrategy:
+#   type: RollingUpdate
+#   maxSurge: 1
+#   maxUnavailable: 0
+
+# replicaCount: 1
+# autoscaling: 
+#   minReplicas: 1
+#   maxReplicas: 10
+#   targetCPUUtilizationPercentage: 80
+#   targetMemoryUtilizationPercentage: 80
+
+# Enable for Pod disruption budget
+# budget:
+#   minAvailable: 1
+
+
+# imagePullSecrets: []
+# nodeSelector: {}
+# tolerations: []
 
 affinity:
   nodeAffinity:
@@ -88,27 +120,14 @@ affinity:
           values:
           - gp-nodes
 
-# livenessProbe:
-#   failureThreshold: 5
-#   initialDelaySeconds: 5
-#   timeoutSeconds: 2
-#   healthcheck:
-#     httpGet:
-#       path: "/health/status"
-#       port: 5000
-# readinessProbe:
-#   failureThreshold: 10
-#   initialDelaySeconds: 5
-#   timeoutSeconds: 2
-#   healthcheck:
-#     httpGet:
-#       path: "/health/status"
-#       port: 5000
+# lifecycle:
+#   preStop:
+#     exec:
+#       command: ["/bin/sh","-c","echo"]
 
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: false
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: apps-sa
+# securityContext:
+#   privileged: true
+#   capabilities:
+#     add:
+#     - SYS_ADMIN

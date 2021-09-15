@@ -12,16 +12,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "app.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
+{{ include "app.name" . }}
 {{- end -}}
 
 {{/*
@@ -56,23 +47,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "app.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "app.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-
-
-{{/*
 Generate hash-based suffix for secrets provider class
 Because for everychange in the content, the name should be changed
 */}}
-{{- define "app.secretsProviderName" }}
+{{- define "app.secretsProviderName" -}}
 {{- if .Values.awsSecrets -}}
 {{ include "app.fullname" . }}-{{ .Values.awsSecrets | toString | adler32sum | trunc 10 }}
 {{- else -}}
