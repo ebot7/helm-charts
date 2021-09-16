@@ -1,6 +1,6 @@
-{{- if eq .Values.resourceType "Deployment" }}
+{{- if eq .Values.resourceType "DaemonSet" }}
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: {{ include "app.fullname" . }}
   namespace: {{ .Values.namespace | default "default" }}
@@ -10,16 +10,6 @@ metadata:
   annotations: {{ toYaml . | nindent 4}}
   {{- end }}
 spec:
-  {{- if not .Values.autoscaling }}
-  replicas: {{ .Values.replicaCount | default 1 }}
-  {{- end }}
-  {{- with .Values.updateStrategy }}
-  strategy:
-    type: {{ .type }}
-    rollingUpdate:
-      maxSurge: {{ .maxSurge }}
-      maxUnavailable: {{ .maxUnavailable }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "app.selectorLabels" . | nindent 6 }}

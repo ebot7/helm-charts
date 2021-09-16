@@ -1,4 +1,4 @@
-{{- if .Values.service.enabled -}}
+{{- if .Values.servicePorts -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,9 +7,9 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.serviceType | default "ClusterIP" }}
   ports:
-    {{- range .Values.service.ports }}
+    {{- range .Values.servicePorts }}
     - port: {{ .port }}
       targetPort: {{ .targetPort }}
       protocol: {{ .protocol }}
