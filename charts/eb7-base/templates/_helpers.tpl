@@ -57,3 +57,36 @@ Because for everychange in the content, the name should be changed
 {{ include "app.fullname" . }}
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+Create affinity rules to run on GPU or CPU nodes
+*/}}
+{{- define "app.affinityTolerationRules" -}}
+{{- if .Values.runOnGPU -}}
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: eks.amazonaws.com/nodegroup
+          operator: In
+          values:
+          - gpu-nodes
+tolerations:
+  - key: nodegroup
+    effect: NoSchedule
+    value: gpu-nodes
+    operator: Equal
+{{- else -}}
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: eks.amazonaws.com/nodegroup
+          operator: In
+          values:
+          - gp-nodes
+{{- end -}}
+{{- end -}}
