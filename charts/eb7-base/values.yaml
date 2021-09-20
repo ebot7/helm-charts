@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: "ECR-Repo"
+  repository: "busybox"
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -78,7 +78,7 @@ healthCheckProbes:
 
 
 # AWS_EFS_ID should be aquired from DevOps Team
-# efsPvcVolumes:
+# persistentVolumes:
 #   - name: efs-pvc1
 #     mountPath: /var/lib/efs-pvc1
 #     size: 6G
@@ -105,20 +105,17 @@ healthCheckProbes:
 # budget:
 #   minAvailable: 1
 
+# Enable and set to anything to run on GPU nodes
+# Otherwise, it will run on CPU nodes
+# runOnGPU: true
 
-# imagePullSecrets: []
-# nodeSelector: {}
-# tolerations: []
 
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: eks.amazonaws.com/nodegroup
-          operator: In
-          values:
-          - gp-nodes
+# Container command and args override
+# commandOverride: ["/bin/sh"]
+# argsOverride: [
+#   "-c",
+#   "while true; do echo sleeping; sleep 10; done"
+# ]
 
 # lifecycle:
 #   preStop:
@@ -131,3 +128,7 @@ affinity:
 #   capabilities:
 #     add:
 #     - SYS_ADMIN
+
+
+# imagePullSecrets: []
+# nodeSelector: {}

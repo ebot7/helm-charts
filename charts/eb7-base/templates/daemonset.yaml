@@ -34,8 +34,11 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          {{- with .Values.args }}
-          args: {{- toYaml . | nindent 10}}
+          {{- with .Values.argsOverride }}
+          args: {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- with .Values.commandOverride }}
+          command: {{- toYaml . | nindent 10 }}
           {{- end }}
           {{- with .Values.securityContext }}
           securityContext:
@@ -90,7 +93,7 @@ spec:
                   name: "{{ include "app.secretsProviderName" $ }}"
           {{- end }}
           {{- end }}
-          {{- if or (.Values.awsSecrets) (.Values.efsPvcVolumes) (.Values.hostVolumes) }}
+          {{- if or (.Values.awsSecrets) (.Values.persistentVolumes) (.Values.hostVolumes) }}
           volumeMounts:
           {{- if .Values.awsSecrets }}
             - mountPath: /mnt/secrets-store
@@ -104,14 +107,14 @@ spec:
               readOnly: {{ .readOnly | default "false" }}
           {{- end }}
           {{- end }}
-          {{- with .Values.efsPvcVolumes }}
+          {{- with .Values.persistentVolumes }}
           {{- range . }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
           {{- end }}
           {{- end }}
           {{- end }}
-      {{- if or (.Values.awsSecrets) (.Values.efsPvcVolumes) (.Values.hostVolumes) }}
+      {{- if or (.Values.awsSecrets) (.Values.persistentVolumes) (.Values.hostVolumes) }}
       volumes:
       {{- with .Values.awsSecrets }}
         - name: secrets-store-inline
@@ -128,7 +131,7 @@ spec:
             path: {{ .hostPath }}
       {{- end }}
       {{- end }}
-      {{- with .Values.efsPvcVolumes }}
+      {{- with .Values.persistentVolumes }}
       {{- range . }}
         - name: {{ .name }}
           persistentVolumeClaim:
@@ -140,12 +143,5 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- include "app.affinityTolerationRules" . | nindent 6 }}
 {{- end }}
