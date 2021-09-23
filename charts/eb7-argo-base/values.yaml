@@ -1,0 +1,73 @@
+# Default values.
+# This is a YAML-formatted file.
+
+###################################################
+#### Settings that CAN be changed on sub-charts ###
+###################################################
+
+# Application namespace and project
+appProject: "default"
+
+# Helm settings
+helmRepoURL: "full-git-repo-url"
+helmRepoBranch: "master" # or HEAD
+HelmChartPath: "sample-chart/"
+helmValuesFile: "values.yaml"
+
+
+############################################################################
+## Settings that SHOULD NOT be changed unless you know what are you doing ##
+############################################################################
+
+argoCDNamespace: "argocd"
+
+# Helm version should not be changed
+helmVersion: "v3"
+
+# Destination kubernetes server
+destinationK8sServer: "https://kubernetes.default.svc"
+
+# AUTOMATED SYNC VARIABLES
+
+# automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+automatedSync: true
+
+# Specifies if resources should be pruned during auto-syncing ( false by default ).
+automatedSyncPrune: true
+
+# Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
+automatedSyncSelfHeal: true
+
+# Allows deleting all application resources during automatic syncing ( false by default ).
+automatedSyncAllowEmpty: false
+
+
+
+# SYNC OPTIONS
+
+# disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
+syncValidate: true
+
+# Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+syncCreateNamespace: false
+
+# Supported policies are background, foreground and orphan.
+syncPrunePropagationPolicy: "foreground"
+
+# Allow the ability for resource pruning to happen as a final, implicit wave of a sync operation
+syncPruneLast: true
+
+
+# RETRY OPTIONS
+
+# number of failed sync attempt retries; unlimited number of attempts if less than 0
+retryLimit: 5
+
+# the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
+backoffDuration: "5s"
+
+# a factor to multiply the base duration after each failed retry
+backoffFactor: 2
+
+# the maximum amount of time allowed for the backoff strategy
+backoffMaxDuration: "3m"
