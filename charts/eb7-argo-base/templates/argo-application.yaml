@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ include "app.fullname" . }}
+  namespace: {{ .Values.argoCDNamespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.appProject }}
+
+  source:
+    repoURL: {{ .Values.helmRepoURL }}
+    targetRevision: {{ .Values.helmRepoBranch }}
+    path: {{ .Values.HelmChartPath }}
+
+    helm:
+      valueFiles:
+        - {{ .Values.helmValuesFile }}
+      version: {{ .Values.helmVersion }}
+
+  destination:
+    server: {{ .Values.destinationK8sServer }}
+    namespace: {{ .Values.appProject }}
+
+  syncPolicy:
+    {{- if .Values.automatedSync }}
+    automated:
+      prune: {{ .Values.automatedSyncPrune }} 
+      selfHeal: {{ .Values.automatedSyncSelfHeal }} 
+      allowEmpty: {{ .Values.automatedSyncAllowEmpty }} 
+    {{- end }}
+    syncOptions:
+    - Validate={{ .Values.syncValidate }}
+    - CreateNamespace={{ .Values.syncCreateNamespace }} 
+    - PrunePropagationPolicy={{ .Values.syncPrunePropagationPolicy }} 
+    - PruneLast={{ .Values.syncPruneLast }}
+
+    retry:
+      limit: {{ .Values.retryLimit }} 
+      backoff:
+        duration: {{ .Values.backoffDuration }}
+        factor: {{ .Values.backoffFactor }} 
+        maxDuration: {{ .Values.backoffMaxDuration }}
