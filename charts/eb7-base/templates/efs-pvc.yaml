@@ -1,4 +1,4 @@
-{{- with .Values.efsPvcVolumes -}}
+{{- with .Values.persistentVolumes -}}
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
