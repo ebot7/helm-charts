@@ -63,6 +63,7 @@ Because for everychange in the content, the name should be changed
 Create affinity rules to run on GPU or CPU nodes
 */}}
 {{- define "app.affinityTolerationRules" -}}
+{{- if not .Values.runOnLocal -}}
 {{- if .Values.runOnGPU -}}
 affinity:
   nodeAffinity:
@@ -88,5 +89,6 @@ affinity:
           operator: In
           values:
           - gp-nodes
+{{- end -}}
 {{- end -}}
 {{- end -}}

@@ -1,5 +1,4 @@
-{{- if .Values.budget -}}
-{{- if .Values.budget.minAvailable -}}
+{{- if .Values.budgetMinAvailable -}}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -8,9 +7,8 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 spec:
-  minAvailable: {{ .Values.budget.minAvailable }}
+  minAvailable: {{ .Values.budgetMinAvailable }}
   selector:
     matchLabels:
       {{- include "app.selectorLabels" . | nindent 6 }}
-{{- end -}}
 {{- end -}}

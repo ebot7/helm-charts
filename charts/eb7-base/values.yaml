@@ -102,13 +102,17 @@ healthCheckProbes:
 #   targetMemoryUtilizationPercentage: 80
 
 # Enable for Pod disruption budget
-# budget:
-#   minAvailable: 1
+# budgetMinAvailable: 1
 
 # Enable and set to anything to run on GPU nodes
 # Otherwise, it will run on CPU nodes
 # runOnGPU: true
 
+
+# Run On Local (false by default)
+# Setting it to true will disable non-essential resources
+# like pod affinity to be able to deploy on local cluster
+runOnLocal: false
 
 # Container command and args override
 # commandOverride: ["/bin/sh"]
