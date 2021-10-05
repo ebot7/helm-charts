@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
   annotations:
-    - silent-notification: "true"
+    silent-notification: "true"
 spec:
   project: {{ .Values.appProject }}
 
