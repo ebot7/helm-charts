@@ -5,6 +5,8 @@ metadata:
   namespace: {{ .Values.argoCDNamespace }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
+  annotations:
+    silent-notification: "true"
 spec:
   project: {{ .Values.appProject }}
 
