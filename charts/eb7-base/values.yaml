@@ -47,10 +47,10 @@ serviceAccountName: apps-sa
 
 annotations:
   linkerd.io/inject: enabled
+  # log_index: my-index.my-app
   # sidecar.jaegertracing.io/inject: "true"
 
 # labels:
-#   log_index: ml.telomere
 #   environment: staging
 
 
