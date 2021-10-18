@@ -88,6 +88,8 @@ healthCheckProbes:
 #     size: 10G
 #     efsID: AWS_EFS_ID2
 
+# It mounts /dev/shm for specific containers
+# enableSharedMemoryVolume: false
 
 # updateStrategy:
 #   type: RollingUpdate
