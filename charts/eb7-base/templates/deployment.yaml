@@ -112,6 +112,10 @@ spec:
               name: secrets-store-inline
               readOnly: true
           {{- end }}
+          {{- if .Values.shm }}
+            - mountPath: /dev/shm
+              name: dshm
+          {{- end }}
           {{- with .Values.hostVolumes }}
           {{- range . }}
             - name: {{ .name }}
@@ -135,6 +139,11 @@ spec:
             readOnly: true
             volumeAttributes:
               secretProviderClass: {{ include "app.secretsProviderName" $ }}
+      {{- end }}
+      {{- with .Values.shm }}
+        - name: dshm
+          emptyDir:
+            medium: Memory
       {{- end }}
       {{- with .Values.hostVolumes }}
       {{- range . }}
