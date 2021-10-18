@@ -105,14 +105,14 @@ spec:
                   name: "{{ include "app.secretsProviderName" $ }}"
           {{- end }}
           {{- end }}
-          {{- if or (.Values.awsSecrets) (.Values.persistentVolumes) (.Values.hostVolumes) }}
+          {{- if or (.Values.awsSecrets) (.Values.persistentVolumes) (.Values.hostVolumes) (.Values.enableSharedMemoryVolume) }}
           volumeMounts:
           {{- if .Values.awsSecrets }}
             - mountPath: /mnt/secrets-store
               name: secrets-store-inline
               readOnly: true
           {{- end }}
-          {{- if .Values.shm }}
+          {{- if .Values.enableSharedMemoryVolume }}
             - mountPath: /dev/shm
               name: dshm
           {{- end }}
@@ -130,7 +130,7 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
-      {{- if or (.Values.awsSecrets) (.Values.persistentVolumes) (.Values.hostVolumes) }}
+      {{- if or (.Values.awsSecrets) (.Values.persistentVolumes) (.Values.hostVolumes) (.Values.enableSharedMemoryVolume) }}
       volumes:
       {{- with .Values.awsSecrets }}
         - name: secrets-store-inline
@@ -140,7 +140,7 @@ spec:
             volumeAttributes:
               secretProviderClass: {{ include "app.secretsProviderName" $ }}
       {{- end }}
-      {{- with .Values.shm }}
+      {{- if .Values.enableSharedMemoryVolume }}
         - name: dshm
           emptyDir:
             medium: Memory
