@@ -86,6 +86,12 @@ spec:
             timeoutSeconds: {{ .timeoutSeconds }}
             periodSeconds: {{ .periodSeconds }}
           {{- end }}
+          {{- with .Values.startupProbes }}
+          startupProbe:
+            {{- with .healthCheck }}{{- toYaml . | nindent 12 }}{{- end}}
+            failureThreshold: {{ .failureThreshold  }}
+            periodSeconds: {{ .periodSeconds  }}
+          {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
