@@ -68,6 +68,18 @@ healthCheckProbes:
   #     port: 5000
 
 
+# Enable it only for applications with long running
+# Startup times to wait (failureThreshold * periodSeconds)
+# Example: 20 minutes
+# startupProbes:
+#   failureThreshold: 20
+#   periodSeconds: 60
+#   healthCheck:
+#     httpGet:
+#       path: "/health/status"
+#       port: 5000
+
+
 # hostVolumes:
 #   - name: host-volume-1
 #     mountPath: /host-volume1
