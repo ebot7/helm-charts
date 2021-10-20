@@ -10,6 +10,9 @@ metadata:
   annotations: {{ toYaml . | nindent 4}}
   {{- end }}
 spec:
+  {{- with .Values.progressDeadlineSeconds }}
+  progressDeadlineSeconds: {{ . }}
+  {{- end }}
   {{- if not .Values.autoscaling }}
   replicas: {{ .Values.replicaCount | default 1 }}
   {{- end }}
