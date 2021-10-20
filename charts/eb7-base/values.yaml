@@ -104,7 +104,7 @@ healthCheckProbes:
 # enableSharedMemoryVolume: false
 
 # Enable for applications with long startup times
-# progressDeadlineSeconds: 36000 # 10 minutes
+# progressDeadlineSeconds: 600 # 10 minutes
 
 # updateStrategy:
 #   type: RollingUpdate
