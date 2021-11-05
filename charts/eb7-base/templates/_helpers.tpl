@@ -40,6 +40,7 @@ Selector labels
 {{- define "app.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "app.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app_name: {{ include "app.name" . }}
 {{- if .Values.labels }}
 {{ toYaml .Values.labels }}
 {{- end }}
