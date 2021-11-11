@@ -24,6 +24,9 @@ argoCDNamespace: "argocd"
 # Helm version should not be changed
 helmVersion: "v3"
 
+# Revision history limit
+revisionHistoryLimit: 2
+
 # Destination kubernetes server
 destinationK8sServer: "https://kubernetes.default.svc"
 

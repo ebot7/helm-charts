@@ -43,7 +43,7 @@ resourceType: "Deployment"
 #     cpu: 100m
 #     memory: 128Mi
 
-serviceAccountName: apps-sa
+serviceAccountName: default-sa
 
 annotations:
   linkerd.io/inject: enabled
@@ -106,10 +106,10 @@ healthCheckProbes:
 # Enable for applications with long startup times
 # progressDeadlineSeconds: 600 # 10 minutes
 
-# updateStrategy:
-#   type: RollingUpdate
-#   maxSurge: 1
-#   maxUnavailable: 0
+updateStrategy:
+  type: RollingUpdate
+  maxSurge: 1
+  maxUnavailable: 0
 
 # replicaCount: 1
 # autoscaling: 
@@ -130,6 +130,7 @@ healthCheckProbes:
 # Setting it to true will disable non-essential resources
 # like pod affinity to be able to deploy on local cluster
 runOnLocal: false
+
 
 # Container command and args override
 # commandOverride: ["/bin/sh"]
