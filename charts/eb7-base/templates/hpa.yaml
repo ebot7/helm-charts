@@ -45,7 +45,7 @@ spec:
         metric:
           name: {{ $key }}
         target:
-          type: AverageValue
-          averageValue: {{ $val }}
+          type: Value
+          value: {{ $val }}
     {{- end }}
 {{- end }}
