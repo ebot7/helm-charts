@@ -12,7 +12,7 @@ spec:
     {{- range .Values.servicePorts }}
     - port: {{ .port }}
       targetPort: {{ .targetPort }}
-      protocol: {{ .protocol }}
+      protocol: {{ .protocol | default "TCP" }}
       name: {{ .name }}
     {{- end }}
   selector:

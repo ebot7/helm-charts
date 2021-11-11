@@ -8,6 +8,8 @@ metadata:
 spec:
   project: {{ .Values.appProject }}
 
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+
   source:
     repoURL: {{ .Values.helmRepoURL }}
     targetRevision: {{ .Values.helmRepoBranch }}
