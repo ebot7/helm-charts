@@ -34,7 +34,7 @@ spec:
     {{- end }}
     {{- range $key,$val := .Values.autoscaling.podMetrics }}
     - type: Pods
-      pod:
+      pods:
         metric:
           name: {{ $key }}
         target:
