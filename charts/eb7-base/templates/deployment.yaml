@@ -174,4 +174,5 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- include "app.affinityTolerationRules" . | nindent 6 }}
+      {{- include "app.SpreadConstraints" . | nindent 6 }}
 {{- end }}
