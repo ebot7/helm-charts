@@ -16,6 +16,7 @@ spec:
   {{- if not .Values.autoscaling }}
   replicas: {{ .Values.replicaCount | default 1 }}
   {{- end }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit | default 2 }}
   {{- with .Values.updateStrategy }}
   strategy:
     type: {{ .type }}
@@ -174,4 +175,5 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- include "app.affinityTolerationRules" . | nindent 6 }}
+      {{- include "app.SpreadConstraints" . | nindent 6 }}
 {{- end }}

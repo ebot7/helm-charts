@@ -93,3 +93,18 @@ affinity:
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "app.SpreadConstraints" -}}
+{{- if not .Values.runOnLocal -}}
+topologySpreadConstraints: 
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+       matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - {{ include "app.name" . }}
+{{- end -}}
+{{- end -}}
