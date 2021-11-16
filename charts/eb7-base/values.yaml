@@ -89,16 +89,14 @@ healthCheckProbes:
 #     hostPath: /var/lib/host-volume2
 
 
-# AWS_EFS_ID should be aquired from DevOps Team
+# name of your volumes should be aquired from DevOps Team
 # persistentVolumes:
 #   - name: efs-pvc1
 #     mountPath: /var/lib/efs-pvc1
-#     size: 6G
-#     efsID: AWS_EFS_ID1
+#     size: 5G # Optional
 #   - name: efs-pvc2
 #     mountPath: /var/lib/efs-pvc2
-#     size: 10G
-#     efsID: AWS_EFS_ID2
+#     size: 5G # Optional
 
 # It mounts /dev/shm for specific containers
 # enableSharedMemoryVolume: false
