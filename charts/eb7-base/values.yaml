@@ -110,11 +110,18 @@ updateStrategy:
   maxUnavailable: 0
 
 # replicaCount: 1
-# autoscaling: 
+# autoscaling:
 #   minReplicas: 1
 #   maxReplicas: 10
-#   targetCPUUtilizationPercentage: 80
-#   targetMemoryUtilizationPercentage: 80
+#   resourceMetrics:
+#     targetCPUUtilizationPercentage: 80
+#     targetMemoryUtilizationPercentage: 80
+#   podMetrics:
+#     sample_metric: "1000m"
+#     sample2: "100k" 
+#   externalMetrics:
+#     ingress_name: "2" #number of requests
+
 
 # Enable for Pod disruption budget
 # budgetMinAvailable: 1

@@ -14,20 +14,40 @@ spec:
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
-    {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
+    {{- with .Values.autoscaling.resourceMetrics }}
+    {{- if .targetCPUUtilizationPercentage}}
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .targetCPUUtilizationPercentage }}
     {{- end }}
-    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- if .targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ .targetMemoryUtilizationPercentage }}
+    {{- end }}
+    {{- end }}
+    {{- range $key,$val := .Values.autoscaling.podMetrics }}
+    - type: Pods
+      pods:
+        metric:
+          name: {{ $key }}
+        target:
+          type: AverageValue
+          averageValue: {{ $val }}
+    {{- end }}
+    {{- range $key,$val := .Values.autoscaling.externalMetrics }}
+    - type: External
+      external:
+        metric:
+          name: {{ $key }}
+        target:
+          type: Value
+          value: {{ $val }}
     {{- end }}
 {{- end }}
