@@ -16,6 +16,7 @@ spec:
   {{- if not .Values.autoscaling }}
   replicas: {{ .Values.replicaCount | default 1 }}
   {{- end }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit | default 2 }}
   {{- with .Values.updateStrategy }}
   strategy:
     type: {{ .type }}
