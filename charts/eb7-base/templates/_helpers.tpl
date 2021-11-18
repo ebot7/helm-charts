@@ -99,7 +99,7 @@ affinity:
 topologySpreadConstraints: 
   - maxSkew: 1
     topologyKey: topology.kubernetes.io/zone
-    whenUnsatisfiable: DoNotSchedule
+    whenUnsatisfiable: ScheduleAnyway
     labelSelector:
        matchExpressions:
           - key: app.kubernetes.io/name
