@@ -5,6 +5,9 @@ metadata:
   namespace: {{ .Values.argoCDNamespace }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # prevent re-generating cache for un-changed apps with shared repositories
+    argocd.argoproj.io/manifest-generate-paths: .
 spec:
   project: {{ .Values.appProject }}
 
