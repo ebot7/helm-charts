@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   eb7-argo-base:
   - apiVersion: v2
+    appVersion: 0.0.6
+    created: "2021-11-30T09:48:11.977195341Z"
+    description: E-Bot7 Base Helm Template for ArgoCD Apps
+    digest: b1f5f5d5be099521fe77373c3975f740b1809b23347dd5407f9c6b8d13a8d02d
+    name: eb7-argo-base
+    type: application
+    urls:
+    - https://github.com/ebot7/helm-charts/releases/download/eb7-argo-base-0.0.6/eb7-argo-base-0.0.6.tgz
+    version: 0.0.6
+  - apiVersion: v2
     appVersion: 0.0.5
     created: "2021-11-29T15:22:26.575957372Z"
     description: E-Bot7 Base Helm Template for ArgoCD Apps
