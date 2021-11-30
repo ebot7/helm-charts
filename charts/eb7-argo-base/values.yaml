@@ -7,6 +7,7 @@
 
 # Application namespace and project
 appProject: "default"
+#appNamespace: "default" # Optional: It is usually the same as appProject
 
 # Helm settings
 helmRepoURL: "full-git-repo-url"

@@ -25,7 +25,7 @@ spec:
 
   destination:
     server: {{ .Values.destinationK8sServer }}
-    namespace: {{ .Values.appProject }}
+    namespace: {{ .Values.appNamespace | default .Values.appProject }}
 
   syncPolicy:
     {{- if .Values.automatedSync }}
