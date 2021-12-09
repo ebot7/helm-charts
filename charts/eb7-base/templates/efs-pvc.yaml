@@ -8,10 +8,10 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: {{ .name }}
-  volumeName: {{ .name }}-pv
+  storageClassName: {{ .storageClassName }}
   resources:
     requests:
       storage: {{ .size | default "5G" }}
+---
 {{- end -}}
 {{- end -}}
