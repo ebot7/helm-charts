@@ -63,6 +63,16 @@ entries:
     version: 0.0.1
   eb7-base:
   - apiVersion: v2
+    appVersion: 0.2.13
+    created: "2021-12-09T12:41:27.075383562Z"
+    description: E-Bot7 Base App Helm Template
+    digest: 51d60728b0b4ffcdb32aaec87768b2186d3b0fc4521473a5b1f6d93b059f9853
+    name: eb7-base
+    type: application
+    urls:
+    - https://github.com/ebot7/helm-charts/releases/download/eb7-base-0.2.13/eb7-base-0.2.13.tgz
+    version: 0.2.13
+  - apiVersion: v2
     appVersion: 0.2.12
     created: "2021-11-18T14:52:40.973656965Z"
     description: E-Bot7 Base App Helm Template
