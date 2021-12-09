@@ -89,13 +89,15 @@ healthCheckProbes:
 #     hostPath: /var/lib/host-volume2
 
 
-# name of your volumes should be aquired from DevOps Team
+# storageClassName of your volumes should be aquired from DevOps Team
 # persistentVolumes:
 #   - name: efs-pvc1
 #     mountPath: /var/lib/efs-pvc1
+#     storageClassName: efs-generic
 #     size: 5G # Optional
 #   - name: efs-pvc2
 #     mountPath: /var/lib/efs-pvc2
+#     storageClassName: efs-generic
 #     size: 5G # Optional
 
 # It mounts /dev/shm for specific containers
