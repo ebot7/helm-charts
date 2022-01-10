@@ -177,4 +177,21 @@ spec:
       {{- end }}
       {{- include "app.affinityTolerationRules" . | nindent 6 }}
       {{- include "app.SpreadConstraints" . | nindent 6 }}
+      affinity:
+        podAntiAffinity:
+          # If possible, avoid putting the replicas on the same node.
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 10
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - "{{ .Release.Name }}"
+                - key: app_name
+                  operator: In
+                  values:
+                  - "{{ include "app.name" . }}"
 {{- end }}
