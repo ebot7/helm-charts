@@ -162,3 +162,6 @@ runOnLocal: false
 
 # imagePullSecrets: []
 # nodeSelector: {}
+
+
+# priorityClassName: "system-node-critical"

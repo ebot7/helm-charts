@@ -159,5 +159,8 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       {{- include "app.affinityTolerationRules" . | nindent 6 }}
 {{- end }}
