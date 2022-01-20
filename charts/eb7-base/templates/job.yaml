@@ -1,0 +1,127 @@
+{{- if eq .Values.resourceType "Job" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "app.fullname" . }}
+  namespace: {{ .Values.namespace | default "default" }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations: {{ toYaml . | nindent 4}}
+  {{- end }}
+spec:
+  backoffLimit: {{ .Values.backoffLimit | default 4 }}
+  activeDeadlineSeconds : {{ .Values.activeDeadlineSeconds | default 3600 }}
+  template:
+    spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
+      {{- with .Values.jobSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image:  "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- with .Values.environments }}
+        envFrom:
+          - configMapRef:
+              name: {{ include "app.fullname" $ }}
+        {{- end }}
+        {{- with .Values.awsSecrets }}
+        env:
+        {{- range . }}
+          - name: {{ .objectAlias | quote }}
+            valueFrom:
+              secretKeyRef:
+                key: {{ .objectAlias | quote }}
+                name: "{{ include "app.secretsProviderName" $ }}"
+        {{- end }}
+        {{- end }}
+        {{- with .Values.commandOverride }}
+        command: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.argsOverride }}
+        args: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.servicePorts }}
+        ports:
+        {{- range . }}
+          - containerPort: {{ .targetPort }}
+            protocol: {{ .protocol | default "TCP" }}
+            name: {{ .name }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.podSecurityContext }}
+        securityContext:
+        {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- if or (.Values.awsSecrets) (.Values.persistentVolumes) (.Values.hostVolumes) (.Values.enableSharedMemoryVolume) }}
+        volumeMounts:
+        {{- if .Values.awsSecrets }}
+          - mountPath: /mnt/secrets-store
+            name: secrets-store-inline
+            readOnly: true
+        {{- end }}
+        {{- if .Values.enableSharedMemoryVolume }}
+          - mountPath: /dev/shm
+            name: dshm
+        {{- end }}
+        {{- with .Values.hostVolumes }}
+        {{- range . }}
+          - name: {{ .name }}
+            mountPath: {{ .mountPath }}
+            readOnly: {{ .readOnly | default "false" }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.persistentVolumes }}
+        {{- range . }}
+          - name: {{ .name }}
+            mountPath: {{ .mountPath }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if or (.Values.awsSecrets) (.Values.persistentVolumes) (.Values.hostVolumes) (.Values.enableSharedMemoryVolume) }}
+      volumes:
+      {{- with .Values.awsSecrets }}
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ include "app.secretsProviderName" $ }}
+      {{- end }}
+      {{- if .Values.enableSharedMemoryVolume }}
+        - name: dshm
+          emptyDir:
+            medium: Memory
+      {{- end }}
+      {{- with .Values.hostVolumes }}
+      {{- range . }}
+        - name: {{ .name }}
+          hostPath:
+            path: {{ .hostPath }}
+      {{- end }}
+      {{- end }}
+      {{- with .Values.persistentVolumes }}
+      {{- range . }}
+        - name: {{ .name }}
+          persistentVolumeClaim:
+            claimName: {{ .name }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      restartPolicy: {{ .Values.restartPolicy | default "Never" }}
+{{- end }}

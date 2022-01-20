@@ -9,7 +9,7 @@ image:
 
 namespace: "default"
 
-# It can be either Deployment or DaemonSet
+# It can be either Deployment or DaemonSet or CronJob or Job
 resourceType: "Deployment" 
 
 
@@ -165,3 +165,5 @@ runOnLocal: false
 
 
 # priorityClassName: "system-node-critical"
+
+# schedule: "0 5 * * *"
