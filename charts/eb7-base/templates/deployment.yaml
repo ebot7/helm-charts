@@ -141,6 +141,7 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default "30" }}
       {{- if or (.Values.awsSecrets) (.Values.persistentVolumes) (.Values.hostVolumes) (.Values.enableSharedMemoryVolume) }}
       volumes:
       {{- with .Values.awsSecrets }}
