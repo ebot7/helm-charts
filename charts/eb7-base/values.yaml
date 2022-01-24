@@ -12,6 +12,8 @@ namespace: "default"
 # It can be either Deployment or DaemonSet or CronJob or Job
 resourceType: "Deployment" 
 
+# Adds HOST_IP to Pod Environment variables (Required for Jaeger integration)
+# addHostIPEnv: true
 
 # environments:
 #   SAMPLE_ENV1: "Value1"
@@ -46,14 +48,13 @@ resourceType: "Deployment"
 serviceAccountName: default-sa
 
 annotations:
-  linkerd.io/inject: enabled
+  # linkerd.io/inject: enabled
   # log_index: my-index.my-app
-  # sidecar.jaegertracing.io/inject: "true"
 
 disableCloudwatchMetrics: 'true'
+
 # labels:
 #   environment: staging
-
 
 healthCheckProbes:
   failureThreshold: 5
