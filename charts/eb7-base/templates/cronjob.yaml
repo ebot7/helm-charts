@@ -32,14 +32,22 @@ spec:
               - configMapRef:
                   name: {{ include "app.fullname" $ }}
             {{- end }}
-            {{- with .Values.awsSecrets }}
+            {{- if or (.Values.awsSecrets) (.Values.addHostIPEnv) }}
             env:
+            {{- if .Values.addHostIPEnv }}
+              - name: "K8S_NODE_IP"
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.hostIP
+            {{- end }}
+            {{- with .Values.awsSecrets }}
             {{- range . }}
               - name: {{ .objectAlias | quote }}
                 valueFrom:
                   secretKeyRef:
                     key: {{ .objectAlias | quote }}
                     name: "{{ include "app.secretsProviderName" $ }}"
+            {{- end }}
             {{- end }}
             {{- end }}
             {{- with .Values.commandOverride }}
