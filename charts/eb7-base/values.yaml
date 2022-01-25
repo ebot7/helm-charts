@@ -140,6 +140,11 @@ updateStrategy:
 # like pod affinity to be able to deploy on local cluster
 runOnLocal: false
 
+# This is a special option to allow special services/pods to run
+# On ON_DEMAND instances on EKS staging instead of SPOT instances
+# DO NOT USE IT FOR PRODUCTION !
+# runOnDemand: true
+
 
 # Container command and args override
 # commandOverride: ["/bin/sh"]
