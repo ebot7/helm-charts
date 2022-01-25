@@ -80,6 +80,21 @@ tolerations:
     effect: NoSchedule
     value: gpu-nodes
     operator: Equal
+{{- else if .Values.runOnDemand -}}
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: eks.amazonaws.com/nodegroup
+          operator: In
+          values:
+          - gp-on-demand-nodes
+tolerations:
+  - key: nodegroup
+    effect: NoSchedule
+    value: gp-on-demand-nodes
+    operator: Equal
 {{- else -}}
 affinity:
   nodeAffinity:
