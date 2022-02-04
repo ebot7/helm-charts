@@ -15,14 +15,6 @@ spec:
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
     {{- with .Values.autoscaling.resourceMetrics }}
-    {{- if .targetCPUUtilizationPercentage}}
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .targetCPUUtilizationPercentage }}
-    {{- end }}
     {{- if .targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
@@ -30,6 +22,14 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .targetMemoryUtilizationPercentage }}
+    {{- end }}
+    {{- if .targetCPUUtilizationPercentage}}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .targetCPUUtilizationPercentage }}
     {{- end }}
     {{- end }}
     {{- range $key,$val := .Values.autoscaling.podMetrics }}
