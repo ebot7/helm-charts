@@ -10,7 +10,7 @@ image:
 namespace: "default"
 
 # It can be either Deployment or DaemonSet or CronJob or Job
-resourceType: "Job" 
+resourceType: "CronJob" 
 
 # Adds HOST_IP to Pod Environment variables (Required for Jaeger integration)
 # addHostIPEnv: true
