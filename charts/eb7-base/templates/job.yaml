@@ -106,6 +106,7 @@ spec:
         {{- range . }}
           - name: {{ .name }}
             mountPath: {{ .mountPath }}
+            subPath: {{ include "app.fullname" $ }}-{{ .name }}
         {{- end }}
         {{- end }}
         {{- end }}
@@ -139,7 +140,7 @@ spec:
       {{- range . }}
         - name: {{ .name }}
           persistentVolumeClaim:
-            claimName: {{ .name }}
+            claimName: {{ include "app.fullname" $ }}-{{ .name }}
       {{- end }}
       {{- end }}
       {{- end }}

@@ -1,17 +1,38 @@
 {{- with .Values.persistentVolumes -}}
 {{- range . }}
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "app.fullname" $ }}-{{ .name }}
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  claimRef:
+    namespace: {{ $.Values.namespace | default "default" }}
+    name: {{ include "app.fullname" $ }}-{{ .name }}
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: {{ .efsID }}
+    volumeAttributes:
+      encryptInTransit: "false"
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .name }}
+  name: {{ include "app.fullname" $ }}-{{ .name }}
   namespace: {{ $.Values.namespace | default "default" }}
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: {{ .storageClassName }}
+  storageClassName: ""
   resources:
     requests:
-      storage: {{ .size | default "5G" }}
+      storage: 5Gi
 ---
 {{- end -}}
 {{- end -}}
