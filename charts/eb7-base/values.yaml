@@ -95,12 +95,10 @@ healthCheckProbes:
 # persistentVolumes:
 #   - name: efs-pvc1
 #     mountPath: /var/lib/efs-pvc1
-#     storageClassName: efs-generic
-#     size: 5G # Optional
+#     efsID: fs-xxxxxxxxx
 #   - name: efs-pvc2
 #     mountPath: /var/lib/efs-pvc2
-#     storageClassName: efs-generic
-#     size: 5G # Optional
+#     efsID: fs-xxxxxxxxx
 
 # It mounts /dev/shm for specific containers
 # enableSharedMemoryVolume: false
