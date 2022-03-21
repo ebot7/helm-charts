@@ -16,6 +16,19 @@ HelmChartPath: "sample-chart/"
 helmValuesFile: "values.yaml"
 
 
+# Generic GitRepo Settings (Works only if helm values are not used)
+# gitRepoURL: "full-git-repo-url"
+# gitRepoBranch: "master"
+# gitRepoPath: "sample-generic-path/"
+
+
+# ignoreDifferences:
+# - kind: ClusterRole
+#   group: rbac.authorization.k8s.io
+#   jsonPointers:
+#   - /rules
+
+
 ############################################################################
 ## Settings that SHOULD NOT be changed unless you know what are you doing ##
 ############################################################################
@@ -60,6 +73,9 @@ syncPrunePropagationPolicy: "foreground"
 
 # Allow the ability for resource pruning to happen as a final, implicit wave of a sync operation
 syncPruneLast: true
+
+# Make sure that ArgoCD respects ignore differences block
+syncRespectIgnoreDifferences: true
 
 
 # RETRY OPTIONS
