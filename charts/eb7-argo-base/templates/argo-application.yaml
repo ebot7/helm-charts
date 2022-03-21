@@ -14,14 +14,20 @@ spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
 
   source:
-    repoURL: {{ .Values.helmRepoURL }}
-    targetRevision: {{ .Values.helmRepoBranch }}
-    path: {{ .Values.HelmChartPath }}
+    repoURL: {{ .Values.helmRepoURL | default .Values.gitRepoURL }}
+    targetRevision: {{ .Values.helmRepoBranch | default  .Values.gitRepoBranch }}
+    path: {{ .Values.HelmChartPath | default .Values.gitRepoPath }}
 
+    {{- if .Values.helmRepoURL }}
     helm:
       valueFiles:
         - {{ .Values.helmValuesFile }}
       version: {{ .Values.helmVersion }}
+    {{- end }}
+  
+  {{- with .Values.ignoreDifferences }}
+  ignoreDifferences: {{ toYaml . | nindent 4 }}
+  {{- end }}
 
   destination:
     server: {{ .Values.destinationK8sServer }}
@@ -39,6 +45,7 @@ spec:
     - CreateNamespace={{ .Values.syncCreateNamespace }} 
     - PrunePropagationPolicy={{ .Values.syncPrunePropagationPolicy }} 
     - PruneLast={{ .Values.syncPruneLast }}
+    - RespectIgnoreDifferences={{ .Values.syncRespectIgnoreDifferences }}
 
     retry:
       limit: {{ .Values.retryLimit }} 
