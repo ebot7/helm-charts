@@ -9,7 +9,7 @@ image:
 
 namespace: "default"
 
-# It can be either Deployment or DaemonSet or CronJob or Job
+# It can be either Deployment, DaemonSet, CronJob, Job or BlueGreenWeights
 resourceType: "Deployment" 
 
 # Adds HOST_IP to Pod Environment variables (Required for Jaeger integration)
@@ -143,6 +143,13 @@ runOnLocal: false
 # DO NOT USE IT FOR PRODUCTION !
 # runOnDemand: true
 
+
+# Blue/Green Weights (if enabled by resourceType)
+# blueGreenWeights:
+#   blue_name: "test-app-2"
+#   blue_weight: "80"
+#   green_name: "test-app-3"
+#   green_weight: "20"
 
 # Container command and args override
 # commandOverride: ["/bin/sh"]
