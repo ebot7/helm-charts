@@ -114,6 +114,12 @@ spec:
                 fieldRef:
                   fieldPath: status.hostIP
           {{- end }}
+          {{- if .Values.addPodNameEnv }}
+            - name: "K8S_POD_NAME"
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          {{- end }}
           {{- with .Values.awsSecrets }}
           {{- range . }}
             - name: {{ .objectAlias | quote }}
