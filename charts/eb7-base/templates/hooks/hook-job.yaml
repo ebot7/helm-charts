@@ -1,0 +1,135 @@
+{{- if .Values.hookValues }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "hook.fullname" . }}
+  namespace: {{ .Values.namespace | default "default" }}
+  labels:
+    {{- include "app.selectorLabels" . | nindent 4 }}
+  annotations: 
+    aws.amazon.com/cloudwatch-agent-ignore: "{{ .Values.disableCloudwatchMetrics }}"
+    {{- with .Values.annotations }} {{- toYaml . | nindent 4 }} {{- end }}
+    "helm.sh/hook": {{ .Values.hookValues.hookType | default "post-install" }} 
+    "helm.sh/hook-weight": {{ .Values.hookValues.hookWeight | default "-5" | quote }} 
+    "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed,before-hook-creation"
+spec:
+  backoffLimit: {{ or .Values.hookValues.backoffLimit .Values.backoffLimit 4 }}
+  activeDeadlineSeconds : {{ or .Values.hookValues.activeDeadlineSeconds .Values.activeDeadlineSeconds 3600 }}
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/hooks/hook-configmap.yaml") . | sha256sum }}
+        checksum/secretprovider: {{ include (print $.Template.BasePath "/hooks/hook-secret-provider.yaml") . | sha256sum }}
+        aws.amazon.com/cloudwatch-agent-ignore: "{{ .Values.disableCloudwatchMetrics }}"
+        {{- with .Values.annotations }} {{- toYaml . | nindent 8 }} {{- end }}
+      labels:
+        {{- include "app.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
+      {{- with .Values.jobSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image:  "{{ .Values.hookValues.imageRepository | default .Values.image.repository }}:{{ .Values.hookValues.imageTag | default .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.hookValues.imagePullPolicy | default .Values.image.pullPolicy }}
+        {{- if .Values.hookValues.inheritEnvironments }}
+        {{- with .Values.environments }}
+        envFrom:
+          - configMapRef:
+              name: {{ include "app.fullname" $ }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.hookValues.environments }}
+        envFrom:
+          - configMapRef:
+              name: {{ include "hook.fullname" $ }}
+        {{- end }}
+        {{- if or (.Values.hookValues.inheritAwsSecrets) (.Values.hookValues.awsSecrets) }}
+        env:
+        {{- if .Values.hookValues.inheritAwsSecrets }}
+        {{- with .Values.awsSecrets }}
+        {{- range . }}
+          - name: {{ .objectAlias | quote }}
+            valueFrom:
+              secretKeyRef:
+                key: {{ .objectAlias | quote }}
+                name: "{{ include "app.secretsProviderName" $ }}"
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.hookValues.awsSecrets }}
+        {{- range . }}
+          - name: {{ .objectAlias | quote }}
+            valueFrom:
+              secretKeyRef:
+                key: {{ .objectAlias | quote }}
+                name: "{{ include "hook.secretsProviderName" $ }}"
+        {{- end }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.hookValues.commandOverride }}
+        command: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.hookValues.argsOverride }}
+        args: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.hookValues.resources }}
+        resources:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.hookValues.servicePorts }}
+        ports:
+        {{- range . }}
+          - containerPort: {{ .targetPort }}
+            protocol: {{ .protocol | default "TCP" }}
+            name: {{ .name }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.hookValues.podSecurityContext }}
+        securityContext:
+        {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .Values.hookValues.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- if or (.Values.hookValues.inheritAwsSecrets) (.Values.hookValues.awsSecrets) }}
+        volumeMounts:
+        {{- if .Values.hookValues.inheritAwsSecrets }}
+          - mountPath: /mnt/secrets-store-inherit
+            name: secrets-store-inline-inherit
+            readOnly: true
+        {{- end }}
+        {{- if .Values.hookValues.awsSecrets }}
+          - mountPath: /mnt/secrets-store
+            name: secrets-store-inline
+            readOnly: true
+        {{- end }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if or (.Values.hookValues.inheritAwsSecrets) (.Values.hookValues.awsSecrets) }}
+      volumes:
+      {{- if .Values.hookValues.inheritAwsSecrets }}
+        - name: secrets-store-inline-inherit
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ include "app.secretsProviderName" $ }}
+      {{- end }}
+      {{- if .Values.hookValues.awsSecrets }}
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ include "hook.secretsProviderName" $ }}
+      {{- end }}
+      {{- end }}
+      restartPolicy: {{ .Values.hookValues.restartPolicy | default "Never" }}
+{{- end }}
