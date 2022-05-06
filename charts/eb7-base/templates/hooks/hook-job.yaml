@@ -10,7 +10,7 @@ metadata:
     aws.amazon.com/cloudwatch-agent-ignore: "{{ .Values.disableCloudwatchMetrics }}"
     {{- with .Values.annotations }} {{- toYaml . | nindent 4 }} {{- end }}
     "helm.sh/hook": {{ .Values.hookValues.hookType | default "post-install" }} 
-    "helm.sh/hook-weight": {{ .Values.hookValues.hookWeight | default "-5" | quote }} 
+    "helm.sh/hook-weight": "-6"
     "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed,before-hook-creation"
 spec:
   backoffLimit: {{ or .Values.hookValues.backoffLimit .Values.backoffLimit 4 }}

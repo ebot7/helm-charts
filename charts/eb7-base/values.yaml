@@ -188,7 +188,6 @@ runOnLocal: false
 #   imagePullPolicy: "IfNotPresent"
 
 #   hookType: "post-install"
-#   hookWeight: "-5"
 
 #   commandOverride: ["/bin/sh"]
 #   argsOverride: [
