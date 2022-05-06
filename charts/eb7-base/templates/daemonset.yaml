@@ -90,13 +90,19 @@ spec:
             - configMapRef:
                 name: {{ include "app.fullname" $ }}
           {{- end }}
-          {{- if or (.Values.awsSecrets) (.Values.addHostIPEnv) }}
+          {{- if or (.Values.awsSecrets) (.Values.addHostIPEnv) (.Values.addPodNameEnv) }}
           env:
           {{- if .Values.addHostIPEnv }}
             - name: "K8S_NODE_IP"
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
+          {{- end }}
+          {{- if .Values.addPodNameEnv }}
+            - name: "K8S_POD_NAME"
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           {{- end }}
           {{- with .Values.awsSecrets }}
           {{- range . }}

@@ -15,6 +15,9 @@ resourceType: "Deployment"
 # Adds HOST_IP to Pod Environment variables (Required for Jaeger integration)
 # addHostIPEnv: true
 
+# Add K8S_POD_NAME to Pod Environment variables
+# addPodNameEnv: true
+
 # environments:
 #   SAMPLE_ENV1: "Value1"
 #   SAMPLE_ENV2: "Value2"
@@ -178,3 +181,31 @@ runOnLocal: false
 # priorityClassName: "system-node-critical"
 
 # schedule: "0 5 * * *"
+
+# hookValues:
+#   imageRepository: "my-hook-repository"
+#   imageTag: "my-hook-tag"
+#   imagePullPolicy: "IfNotPresent"
+
+#   hookType: "post-install"
+
+#   commandOverride: ["/bin/sh"]
+#   argsOverride: [
+#     "-c",
+#     "while true; do echo sleeping; sleep 10; done"
+#   ]
+
+#   environments:
+#     SAMPLE_ENV1: "Value1"
+#     SAMPLE_ENV2: "Value2"
+
+#   awsSecrets:
+#   - objectAlias: SECRET1
+#     objectType: secretsmanager
+#     objectName: 'ARN1'
+#   - objectAlias: SECRET2
+#     objectType: secretsmanager
+#     objectName: 'ARN2'
+
+#   inheritAwsSecrets: true
+#   inheritEnvironments: true

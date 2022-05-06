@@ -16,6 +16,24 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Hook full name (if any)
+*/}}
+{{- define "hook.fullname" -}}
+hook-{{ include "app.name" . }}
+{{- end -}}
+
+{{/*
+hook-secret-name (if any)
+*/}}
+{{- define "hook.secretsProviderName" -}}
+{{- if .Values.hookValues.awsSecrets -}}
+{{ include "hook.fullname" . }}-{{ .Values.hookValues.awsSecrets | toString | adler32sum | trunc 10 }}
+{{- else -}}
+{{ include "hook.fullname" . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "app.chart" -}}

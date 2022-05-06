@@ -1,0 +1,19 @@
+{{- if .Values.hookValues }}
+{{- if .Values.hookValues.environments -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hook.fullname" . }}
+  namespace: {{ .Values.namespace | default "default" }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": {{ .Values.hookValues.hookType | default "post-install" }} 
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed,before-hook-creation"
+data:
+{{- range $k, $v := .Values.hookValues.environments }}
+  {{ $k }}: {{ $v | quote }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
