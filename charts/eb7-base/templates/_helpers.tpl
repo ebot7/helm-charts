@@ -83,8 +83,23 @@ Create affinity rules to run on GPU or CPU nodes
 */}}
 {{- define "app.affinityTolerationRules" -}}
 {{- if not .Values.runOnLocal -}}
-{{- if .Values.runOnGPU -}}
 affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 10
+      podAffinityTerm:
+        topologyKey: kubernetes.io/hostname
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/instance
+            operator: In
+            values:
+            - "{{ .Release.Name }}"
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - "{{ include "app.name" . }}"
+{{- if .Values.runOnGPU }}
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
@@ -98,8 +113,7 @@ tolerations:
     effect: NoSchedule
     value: gpu-nodes
     operator: Equal
-{{- else if .Values.runOnDemand -}}
-affinity:
+{{- else if .Values.runOnDemand }}
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
@@ -113,8 +127,7 @@ tolerations:
     effect: NoSchedule
     value: gp-on-demand-nodes
     operator: Equal
-{{- else -}}
-affinity:
+{{- else }}
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
