@@ -4,5 +4,5 @@ description: E-Bot7 Base App Helm Template
 
 type: application
 
-version: 0.2.26
-appVersion: 0.2.26
+version: 0.2.27
+appVersion: 0.2.27

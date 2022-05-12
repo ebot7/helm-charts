@@ -135,11 +135,15 @@ updateStrategy:
 # Otherwise, it will run on CPU nodes
 # runOnGPU: true
 
-
 # Run On Local (false by default)
 # Setting it to true will disable non-essential resources
 # like pod affinity to be able to deploy on local cluster
 runOnLocal: false
+
+# This is a special option to allow blue/non-live services/pods to run
+# On GP-BLUE instances on EKS PRODUCTION instead of GP instances.
+# It only works on PRODUCTION !
+# runOnBlue: true
 
 # This is a special option to allow special services/pods to run
 # On ON_DEMAND instances on EKS staging instead of SPOT instances
