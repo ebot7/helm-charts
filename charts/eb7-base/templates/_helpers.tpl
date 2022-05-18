@@ -136,6 +136,25 @@ tolerations:
           operator: In
           values:
           - gp-blue-nodes
+tolerations:
+  - key: nodegroup
+    effect: NoSchedule
+    value: gp-blue-nodes
+    operator: Equal
+{{- else if .Values.runOnGreen }}
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: eks.amazonaws.com/nodegroup
+          operator: In
+          values:
+          - gp-green-nodes
+tolerations:
+  - key: nodegroup
+    effect: NoSchedule
+    value: gp-green-nodes
+    operator: Equal
 {{- else }}
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:

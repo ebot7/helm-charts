@@ -145,6 +145,11 @@ runOnLocal: false
 # It only works on PRODUCTION !
 # runOnBlue: true
 
+# This is a special option to allow green/live services/pods to run
+# On GP-GREEN instances on EKS PRODUCTION instead of GP instances.
+# It only works on PRODUCTION !
+# runOnGreen: true
+
 # This is a special option to allow special services/pods to run
 # On ON_DEMAND instances on EKS staging instead of SPOT instances
 # DO NOT USE IT FOR PRODUCTION !
