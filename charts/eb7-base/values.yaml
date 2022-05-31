@@ -9,7 +9,7 @@ image:
 
 namespace: "default"
 
-# It can be either Deployment, DaemonSet, CronJob, Job or BlueGreenWeights
+# It can be either Deployment, CronJob, Job, BlueGreenWeights or Service
 resourceType: "Deployment" 
 
 # Adds HOST_IP to Pod Environment variables (Required for Jaeger integration)
@@ -58,6 +58,10 @@ disableCloudwatchMetrics: 'true'
 
 # labels:
 #   environment: staging
+
+# serviceSelectorLabels:
+#   selector1: value1
+#   selector2: value2
 
 healthCheckProbes:
   failureThreshold: 5
