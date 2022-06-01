@@ -1,4 +1,4 @@
-{{- if and (.Values.servicePorts) (not (eq .Values.resourceType "Service")) -}}
+{{- if eq .Values.resourceType "Service" -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -16,5 +16,5 @@ spec:
       name: {{ .name }}
     {{- end }}
   selector:
-    {{- include "app.selectorLabels" . | nindent 4 }}
+    {{- toYaml .Values.serviceSelectorLabels | nindent 4 }}
 {{- end }}
